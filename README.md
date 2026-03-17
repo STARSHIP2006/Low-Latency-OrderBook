@@ -3,14 +3,36 @@
 **OrderBook** is a high-performance, concurrent order book engine implemented in **C++**, designed with a focus on **low-latency trading** and **scalable order processing**. The project explores core mechanisms used in modern financial exchange systems, emphasizing concurrency, correctness, and performance.
 
 ## Key Features
-- Concurrent order processing using **Intel Threading Building Blocks (TBB)**
-- Support for multiple order types: **Limit, Market, IOC**, with extensibility for stop orders
-- Asynchronous matching with separate buy/sell processing to reduce lock contention
-- **Price–time priority** management  
-  - Buy orders sorted by descending price  
-  - Sell orders sorted by ascending price
-- Fast order modification and cancellation via TBB concurrent containers
-- Latency and throughput benchmarking for performance validation
+
+### Low Latency Matching
+Benchmarked across **16,000 samples**:
+| Metric | Latency |
+|--------|---------|
+| Median | 10 µs |
+| Average | 2,089 µs |
+| p99 | 9,250 µs |
+
+### 🔧 Intel TBB Integration
+Leverages TBB's concurrent containers — `tbb::concurrent_hash_map` and 
+`tbb::concurrent_queue` — for high-throughput, thread-safe order processing 
+without coarse-grained locking.
+
+### Asynchronous Matching Engine
+Dedicated threads for buy and sell queues process orders independently, 
+reducing lock contention and improving overall throughput under load.
+
+### Multiple Order Types
+| Order Type | Behavior |
+|------------|----------|
+| Limit | Rests in book at specified price |
+| Market | Executes immediately at best available price |
+| IOC | Fills what it can, cancels residual quantity |
+| Stop | Stubbed — planned for future implementation |
+
+### Modular & Extensible
+Clean separation of matching logic, order lifecycle, and queue management 
+enables straightforward extension for partial fills, advanced order types, 
+and custom matching rules.
 
 ## Design Overview
 - `std::map`-based bid/ask price levels
