@@ -12,7 +12,7 @@ Benchmarked across **16,000 samples**:
 | Average | 2,089 µs |
 | p99 | 9,250 µs |
 
-### 🔧 Intel TBB Integration
+### Intel TBB Integration
 Leverages TBB's concurrent containers — `tbb::concurrent_hash_map` and 
 `tbb::concurrent_queue` — for high-throughput, thread-safe order processing 
 without coarse-grained locking.
